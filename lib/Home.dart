@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:united_code_scanner_generator/Generator.dart';
 import 'package:united_code_scanner_generator/Scanner.dart';
 
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -7,23 +6,9 @@ import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:united_code_scanner_generator/Home.dart';
 
-//
-// final mediaStorePlugin = MediaStore();
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
-  //await MediaStore.ensureInitialized();
-  //
-  // List<Permission> permissions = [
-  //   Permission.storage,
-  // ];
-  //
-  // if ((await mediaStorePlugin.getPlatformSDKInt()) >= 33) {
-  //   permissions.add(Permission.photos);
-  // }
-  //
-  // await permissions.request();
 
   runApp(MaterialApp(home: Splash(),debugShowCheckedModeBanner: false,));
 }

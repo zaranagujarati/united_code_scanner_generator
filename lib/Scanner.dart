@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'ads.dart';
 
 class Scanner extends StatefulWidget {
   const Scanner({super.key});
@@ -13,6 +16,15 @@ class _ScannerState extends State<Scanner> {
   bool isScanning = false;
   bool _isDialogOpen = false;
   final MobileScannerController controller = MobileScannerController();
+  BannerAd? _bannerAd;
+  bool _isBannerAdReady = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _createBanner();
+  }
 
   void handleData(String data) async {
     if (_isDialogOpen) return;
@@ -56,9 +68,31 @@ class _ScannerState extends State<Scanner> {
     controller.start();
   }
 
+  void _createBanner() {
+    _bannerAd = BannerAd(
+      adUnitId: AdMobService.bannerAdUnitId1!,
+      size: AdSize.banner,
+      request: AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          print('-----BannerAd failed to load: $error');
+          _isBannerAdReady = false;
+          ad.dispose();
+        },
+      ),
+    )..load();
+  }
+
+
   @override
   void dispose() {
     controller.dispose();
+    _bannerAd?.dispose();
     super.dispose();
   }
 
@@ -112,6 +146,7 @@ class _ScannerState extends State<Scanner> {
               height: screenWidth * 0.8,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.redAccent, width: 4), // 🔴 Colored border
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.5),
@@ -138,6 +173,7 @@ class _ScannerState extends State<Scanner> {
                 ),
               ),
             ),
+
             SizedBox(height: screenHeight * 0.05),
             Container(
               height: screenHeight * 0.08,
@@ -189,6 +225,14 @@ class _ScannerState extends State<Scanner> {
           ),
         ),
       ),
+      bottomNavigationBar: _isBannerAdReady
+          ? Container(
+        height: _bannerAd!.size.height.toDouble(),
+        width: _bannerAd!.size.width.toDouble(),
+        alignment: Alignment.center,
+        child: AdWidget(ad: _bannerAd!),
+      )
+          : const SizedBox(height: 50),
     );
   }
 }

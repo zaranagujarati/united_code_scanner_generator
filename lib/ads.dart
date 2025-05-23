@@ -16,4 +16,10 @@ class AdMobService
     }
     return null;
   }
+  static String? get bannerAdUnitId1{
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-8347273600047970/2868974364';
+    }
+    return null;
+  }
 }
